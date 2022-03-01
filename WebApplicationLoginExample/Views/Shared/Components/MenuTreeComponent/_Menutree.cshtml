@@ -1,0 +1,35 @@
+﻿@model IEnumerable<WebApplicationLoginExample.ViewModels.MenuTreeViewModel>
+
+<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+    <ul class="navbar-nav flex-grow-1">
+        @foreach (var item in Model)
+        {
+            var liClass = "nav-item";
+            var firstAClass = "nav-link text-dark";
+
+            if (item.IsParent)
+            {
+                liClass += " dropdown";
+                firstAClass += " dropdown-toggle";
+
+                <li class="@liClass">
+                    <a class="@firstAClass" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        @item.Name
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        @foreach (var sub in item.SubItems)
+                        {
+                            <a class="dropdown-item" href="@sub.URL">@sub.Name</a>
+                        }
+                    </div>
+                </li>
+            }
+            else
+            {
+                <li class="@liClass">
+                    <a class="@firstAClass" href="@item.URL">@item.Name</a>
+                </li>
+            }
+        }
+    </ul>
+</div>

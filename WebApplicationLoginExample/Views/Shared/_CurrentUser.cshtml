@@ -1,0 +1,10 @@
+﻿@{
+    if (User.Identity.IsAuthenticated)
+    {
+        @Html.ActionLink("Logout", "Logout", "Login", new { area = "auth" });
+    }
+    else
+    {
+        <p>@User.Identity.Name</p>
+    }
+}

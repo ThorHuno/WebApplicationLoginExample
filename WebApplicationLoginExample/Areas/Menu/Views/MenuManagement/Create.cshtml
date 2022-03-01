@@ -1,0 +1,26 @@
+﻿@model WebApplicationLoginExample.ViewModels.MenuItemInput
+@{
+    ViewData["Title"] = "New menu item";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Create", "menu", FormMethod.Post))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name, new { placeholder = "Item name", @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Url)
+        @Html.TextBoxFor(m => m.Url, new { placeholder = "Item URL", @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.Label("Parent menu")
+        @Html.DropDownListFor(m => m.ParentId, (ViewBag.Parents as List<DataAccessLayer.Entities.Menu>).Select(item => new SelectListItem(item.Name, item.Id.ToString())), "Select a parent item", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.Label("Roles")
+        @Html.DropDownListFor(m => m.RolesSelected, (ViewBag.Roles as List<WebApplicationLoginExample.ViewModels.RolesViewModel>).Select(item => new SelectListItem(item.Name, item.Id.ToString())), "Select a role", new { @class = "form-control", multiple = true })
+    </div>
+    <input type="submit" value="Create item" />
+}
