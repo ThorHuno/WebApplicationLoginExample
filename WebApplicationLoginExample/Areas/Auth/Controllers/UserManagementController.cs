@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using WebApplicationLoginExample.Services;
 using WebApplicationLoginExample.ViewModels;
 
@@ -33,24 +34,39 @@ namespace WebApplicationLoginExample.Areas.Auth.Controllers
         }
 
         [HttpPost("{area}/{controller}/Signup")]
-        public async Task<IActionResult> Index([FromForm] RegisterViewModel register)
+        public async Task<IActionResult> Register([FromForm] RegisterViewModel register)
         {
             ViewBag.Roles = _authService.ListRoles();
 
             if (!ModelState.IsValid)
-                return View(register);
+                return View();
 
             try
             {
                 var result = await _authService.Register(register.UserName, register.Password, register.RolesSelected);
 
                 if (result.Succeeded)
+                {
+                    TempData["Message"] = JsonConvert.SerializeObject(new MessageViewModel
+                    {
+                        MessageType = 1,
+                        Message = "User saved",
+                        Tittle = "Success"
+                    });
                     return Redirect("/auth/UserManagement");
+                }
 
                 return View(register);
             }
             catch (Exception ex)
             {
+                TempData["Message"] = JsonConvert.SerializeObject(new MessageViewModel
+                {
+                    MessageType = -1,
+                    Message = ex.Message,
+                    Tittle = "Error"
+                });
+
                 return View(register);
             }
         }
@@ -76,6 +92,13 @@ namespace WebApplicationLoginExample.Areas.Auth.Controllers
             }
             catch (Exception ex)
             {
+                TempData["Message"] = JsonConvert.SerializeObject(new MessageViewModel
+                {
+                    MessageType = -1,
+                    Message = ex.Message,
+                    Tittle = ex.Message
+                });
+
                 return RedirectToAction("Index", new { area = "auth" });
             }
         }
@@ -91,12 +114,28 @@ namespace WebApplicationLoginExample.Areas.Auth.Controllers
                 var result = await _authService.UpdateUser(id, user);
 
                 if (result.Succeeded)
+                {
+                    TempData["Message"] = JsonConvert.SerializeObject(new MessageViewModel
+                    {
+                        MessageType = 1,
+                        Message = "User saved",
+                        Tittle = "Success"
+                    });
+
                     return Redirect("/auth/UserManagement");
+                }
 
                 return View(user);
             }
             catch (Exception ex)
             {
+                TempData["Message"] = JsonConvert.SerializeObject(new MessageViewModel
+                {
+                    MessageType = -1,
+                    Message = ex.Message,
+                    Tittle = ex.Message
+                });
+
                 return View(user);
             }
         }

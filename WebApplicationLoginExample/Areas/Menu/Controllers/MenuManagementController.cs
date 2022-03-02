@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using WebApplicationLoginExample.Services;
 using WebApplicationLoginExample.ViewModels;
 
@@ -44,10 +43,24 @@ namespace WebApplicationLoginExample.Areas.Menu.Controllers
 
                 _menuService.AddMenuItem(menu.Name, menu.Url, menu.RolesSelected, menu.ParentId);
 
+                TempData["Message"] = JsonConvert.SerializeObject(new MessageViewModel
+                {
+                    MessageType = 1,
+                    Message = "Menu item created",
+                    Tittle = "Success"
+                });
+
                 return Redirect("/home/index");
             }
             catch (Exception ex)
             {
+                TempData["Message"] = JsonConvert.SerializeObject(new MessageViewModel
+                {
+                    MessageType = -1,
+                    Message = ex.Message,
+                    Tittle = "Error"
+                });
+
                 return View(menu);
             }
         }

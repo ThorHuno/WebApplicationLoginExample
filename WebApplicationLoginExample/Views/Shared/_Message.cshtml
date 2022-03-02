@@ -1,0 +1,40 @@
+﻿@using Newtonsoft.Json;
+@using WebApplicationLoginExample.ViewModels;
+
+@if (TempData["Message"] != null)
+{
+    var messageStr = TempData["Message"] as string;
+    var messageObj = JsonConvert.DeserializeObject<MessageViewModel>(messageStr);
+
+    var cardClass = "border-dark";
+    var textClass = "text-dark";
+
+    switch (messageObj.MessageType)
+    {
+        case 0:
+            cardClass = "border-info";
+            textClass = "text-info";
+            break;
+        case -1:
+            cardClass = "border-danger";
+            textClass = "text-danger";
+            break;
+        case 1:
+            cardClass = "border-success";
+            textClass = "text-success";
+            break;
+    }
+
+    <div class="container">
+        <div class="card @cardClass">
+            <div class="card-body @textClass">
+                <h5 class="card-title">
+                    @messageObj.Tittle
+                </h5>
+                <p class="card-text">
+                    @messageObj.Message
+                </p>
+            </div>
+        </div>
+    </div>
+}

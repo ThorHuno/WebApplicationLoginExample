@@ -17,12 +17,13 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 @await Component.InvokeAsync("MenuTreeComponent")
-                @await Html.PartialAsync("_CurrentUser.cshtml")
+                @await Html.PartialAsync("_CurrentUser")
             </div>
         </nav>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @await Html.PartialAsync("_Message")
             @RenderBody()
         </main>
     </div>
